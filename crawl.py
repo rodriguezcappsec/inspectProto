@@ -16,7 +16,6 @@ def getJavaScriptFiles():
             links["scripts"].append(scripts.get("src"))
         else:
             links["code"].append(base64.b64encode(str(scripts.string).encode("ascii")))
-            print(scripts.contents)
 
         if re.match(".*\.js", _links.get("href")):
             links["links"].append(_links.get("href"))
