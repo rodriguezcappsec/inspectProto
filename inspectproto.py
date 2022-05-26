@@ -31,9 +31,14 @@ ___) (___| )  \  |/\____) || )      | (____/\| (____/\   | |     | )      | ) \ 
     type=str,
     help="Any header neaded for the request to be successful",
 )
-def inspect_proto(target, headers):
+@click.option(
+    "--filter_file",
+    help="add files names separated by comma to exclude. Example: jquery.js",
+)
+def inspect_proto(target, headers, filter_file):
     click.echo(banner)
-    crawler = CrawlPage(target, headers)
+    _filter_file = filter_file.split(",") if filter_file else ''
+    crawler = CrawlPage(target, headers, _filter_file)
     page = crawler.crawl_page_for_javascript()
     print(page)
 

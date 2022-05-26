@@ -3,14 +3,14 @@ import re
 import requests
 import base64
 import click
-from urllib.parse import urlparse
+from urllib.parse import urljoin
 
 
 class CrawlPage:
-    def __init__(self, target, headers):
+    def __init__(self, target, headers, filter_file):
         self.target = target
         self.headers = headers
-        print(urlparse(self.target))
+        self.filter = filter_file
 
     def crawl_page_for_javascript(self):
         click.echo(
@@ -23,14 +23,16 @@ class CrawlPage:
             )
             if page.status_code == 200:
                 soup = BeautifulSoup(page.text, "lxml")
-                for scripts, _links in zip(
-                    soup.findAll("script"), soup.findAll("link")
-                ):
+                for scripts in soup.findAll("script"):
                     if scripts.get("src") != None:
-                        links["scripts"].append(scripts.get("src"))
+                        file_name = re.search("[^\/]*$", scripts.get("src"))
+                        if file_name != None and file_name.group(0) not in self.filter:
+                            links["scripts"].append(
+                                urljoin(self.target, scripts.get("src"))
+                            )
                     else:
                         links["code"].append(
-                            base64.b64encode(str(scripts.string).encode("ascii"))
+                            base64.b64encode(scripts.string.encode("utf-8"))
                         )
             else:
                 click.echo(
@@ -45,7 +47,4 @@ class CrawlPage:
             print("Error Connecting:", ce)
 
     def get_javascript():
-        print()
-
-    def format_paths(path):
-        print()
+        print() #time to decode javascript and fetch javascript
