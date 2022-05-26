@@ -12,7 +12,7 @@ class CrawlPage:
 
     def crawl_page_for_javascript(self):
         click.echo(
-            f"Scanning target {click.style(self.target, fg='green')} for client side prototype pollution..."
+            f"Scanning target {click.style(self.target, fg='green')} for client side prototype pollution... \n\n"
         )
         try:
             links = {"scripts": [], "links": [], "code": []}
