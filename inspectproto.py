@@ -1,5 +1,5 @@
 import click
-import helpers
+from helpers import CrawlPage
 
 @click.command()
 @click.option(
@@ -15,8 +15,9 @@ import helpers
     help="Any header neaded for the request to be successful",
 )
 def inspect_proto(target, headers):
-    js = helpers.get_javascript(target, headers)
-    print(js)
+    crawler = CrawlPage(target, headers)
+    page = crawler.crawl_page_for_javascript()
+    print(page)
 
 
 if __name__ == "__main__":
