@@ -4,6 +4,7 @@ import requests
 import base64
 import click
 
+
 def get_javascript(target, headers):
     click.echo(
         f"Scanning target {click.style(target, fg='green')} for client side prototype pollution..."
@@ -23,7 +24,10 @@ def get_javascript(target, headers):
                 if re.match(".*\.js", _links.get("href")):
                     links["links"].append(_links.get("href"))
         else:
-            print(f"there was an problem accessing the website {page.status_code}")
+            click.echo(
+                click.style(f"there was an problem accessing the website", fg="red")
+                + page.status_code
+            )
         page.raise_for_status()
         return links
     except requests.exceptions.HTTPError as e:
