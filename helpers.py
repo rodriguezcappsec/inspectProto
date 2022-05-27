@@ -51,7 +51,7 @@ class AssesPage:
                     file, headers=self.headers if self.headers != None else ""
                 )
                 if js.status_code == 200:
-                    click.echo(f"{click.style('Scanning file: ', fg='green')} {click.style(file, fg='yellow')} for prototype pollution...")
+                    click.echo(f"{click.style('Scanning file: ', fg='green')} {click.style(file, fg='yellow')} for prototype pollution")
                     # code here to check if vulnerable
                 else:
                     js.raise_for_status()
