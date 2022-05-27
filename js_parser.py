@@ -1,5 +1,4 @@
 import esprima
-
 class JSParser(esprima.NodeVisitor):
     """Custom node visitor that focuses on one particular function call"""
     def __init__(self):
@@ -20,4 +19,4 @@ class JSParser(esprima.NodeVisitor):
     #     self.generic_visit(node)
 
     def visit_ObjectExpression(self,node):
-        print(node)
+        print("yes")

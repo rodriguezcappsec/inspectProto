@@ -5,7 +5,8 @@ import base64
 import click
 from urllib.parse import urljoin
 from js_parser import JSParser
-import esprima
+from esprima import parseScript, Error, parse
+import jsbeautifier
 
 class AssesPage:
     def __init__(self, target, headers, filter_file):
@@ -31,6 +32,8 @@ class AssesPage:
                         if file_name != None and file_name.group(0) not in self.filter:
                             self.code["script_urls"].append(
                                 urljoin(self.target, scripts.get("src"))
+                                .replace("\r\n\t", "")
+                                .strip()
                             )
                     else:
                         for i in scripts:
@@ -52,7 +55,9 @@ class AssesPage:
                     file, headers=self.headers if self.headers != None else ""
                 )
                 if js.status_code == 200:
-                    click.echo(f"{click.style('Scanning file: ', fg='green')} {click.style(file, fg='yellow')} for prototype pollution")
+                    click.echo(
+                        f"{click.style('Scanning file: ', fg='green')} {click.style(file, fg='yellow')} for prototype pollution"
+                    )
                     # code here to check if vulnerable
                     self.check_for_pollution(js.text)
                 else:
@@ -63,7 +68,10 @@ class AssesPage:
                 print(f"Error Connecting to: {click.style(file, fg='red')}", ce)
 
     def check_for_pollution(self, code):
-        ast = esprima.parse(code, {'range': True})
-        # visit the AST, this fills the found_ranges list
-        v = JSParser()
-        v.visit(ast)
+        try:
+            ast = parse(jsbeautifier.beautify(code), {"tolerant": True})
+            checks = JSParser()
+            checks.visit(ast)
+            exit()
+        except Error as e:
+            print(e)
