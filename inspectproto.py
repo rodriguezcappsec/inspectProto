@@ -1,5 +1,5 @@
 import click
-from helpers import CrawlPage
+from helpers import AssesPage
 
 banner = click.style(
     """
@@ -38,9 +38,8 @@ ___) (___| )  \  |/\____) || )      | (____/\| (____/\   | |     | )      | ) \ 
 def inspect_proto(target, headers, filter_file):
     click.echo(banner)
     _filter_file = filter_file.split(",") if filter_file else ''
-    crawler = CrawlPage(target, headers, _filter_file)
-    page = crawler.crawl_page_for_javascript()
-    print(page)
+    crawler = AssesPage(target, headers, _filter_file)
+    crawler.check_if_vulnerable()
 
 
 if __name__ == "__main__":
