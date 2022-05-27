@@ -22,7 +22,7 @@ class CrawlPage:
                 self.target, headers=self.headers if self.headers != None else ""
             )
             if page.status_code == 200:
-                soup = BeautifulSoup(page.text, "lxml")
+                soup = BeautifulSoup(page.text, "html.parser")
                 for scripts in soup.findAll("script"):
                     if scripts.get("src") != None:
                         file_name = re.search("[^\/]*$", scripts.get("src"))
@@ -31,15 +31,13 @@ class CrawlPage:
                                 urljoin(self.target, scripts.get("src"))
                             )
                     else:
-                        links["code"].append(
-                            base64.b64encode(scripts.string.encode("utf-8"))
-                        )
+                        for i in scripts:
+                            if i.string:
+                                links["code"].append(
+                                    base64.b64encode(i.string.encode("utf-8"))
+                                )
             else:
-                click.echo(
-                    click.style(f"there was an problem accessing the website", fg="red")
-                    + page.status_code
-                )
-            page.raise_for_status()
+                page.raise_for_status()
             return links
         except requests.exceptions.HTTPError as e:
             print("Http Error:", e)
@@ -47,4 +45,4 @@ class CrawlPage:
             print("Error Connecting:", ce)
 
     def get_javascript():
-        print() #time to decode javascript and fetch javascript
+        print()  # time to decode javascript and fetch javascript
