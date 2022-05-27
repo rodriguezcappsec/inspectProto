@@ -4,7 +4,8 @@ import requests
 import base64
 import click
 from urllib.parse import urljoin
-
+from js_parser import JSParser
+import esprima
 
 class AssesPage:
     def __init__(self, target, headers, filter_file):
@@ -53,11 +54,16 @@ class AssesPage:
                 if js.status_code == 200:
                     click.echo(f"{click.style('Scanning file: ', fg='green')} {click.style(file, fg='yellow')} for prototype pollution")
                     # code here to check if vulnerable
+                    self.check_for_pollution(js.text)
                 else:
                     js.raise_for_status()
             except requests.exceptions.HTTPError as e:
                 print(f"Http Error: {click.style(file, fg='red')}", e)
             except requests.exceptions.ConnectionError as ce:
                 print(f"Error Connecting to: {click.style(file, fg='red')}", ce)
-    def check_for_pollution(self):
-        print()
+
+    def check_for_pollution(self, code):
+        ast = esprima.parse(code, {'range': True})
+        # visit the AST, this fills the found_ranges list
+        v = JSParser()
+        v.visit(ast)
