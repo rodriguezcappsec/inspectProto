@@ -5,7 +5,7 @@ import base64
 import click
 from urllib.parse import urljoin
 from js_parser import JSParser
-from esprima import parseScript, Error, parse
+from esprima import parseScript, Error, parse, parseModule
 import jsbeautifier
 
 class AssesPage:
@@ -70,8 +70,9 @@ class AssesPage:
     def check_for_pollution(self, code):
         try:
             ast = parse(jsbeautifier.beautify(code), {"tolerant": True})
-            checks = JSParser()
-            checks.visit(ast)
-            exit()
+            # checks = JSParser()
+            # checks.visit(ast)
+            # exit()
+
         except Error as e:
-            print(e)
+            print()

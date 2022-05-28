@@ -1,6 +1,9 @@
 import esprima
+
+
 class JSParser(esprima.NodeVisitor):
     """Custom node visitor that focuses on one particular function call"""
+
     def __init__(self):
         self.found_sinks = []
 
@@ -18,5 +21,6 @@ class JSParser(esprima.NodeVisitor):
     #     # visit everything else in the tree
     #     self.generic_visit(node)
 
-    def visit_ObjectExpression(self,node):
-        print("yes")
+    def visit_ObjectExpression(self, node):
+        print(node)
+        # self.generic_visit(node)
